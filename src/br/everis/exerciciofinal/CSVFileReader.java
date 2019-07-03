@@ -8,13 +8,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class CSVFileReader extends Book {
-	// static Set<Book> books = new HashSet<Book>();
 
-	public void read(String fileName) {
+public class CSVFileReader extends Book {
+	
+	/**
+	  * Método que lê as linhas de um arquivo csv e chama o método addBooktoSet()
+	  */
+	public void read(String fileName, Set<Book> sortedSet) {
 		BufferedReader br = null;
 		FileReader fr = null;
-		Set<Book> sortedSet = new TreeSet<Book>();
 
 		try {
 			fr = new FileReader(fileName);
@@ -24,15 +26,7 @@ public class CSVFileReader extends Book {
 			while ((line = br.readLine()) != null) {
 				// System.out.println(line);
 				List<String> bookAttributes = Arrays.asList(line.split(","));
-				Book book = new Book();
-				book.setTitle(bookAttributes.get(0));
-				book.setAuthor(bookAttributes.get(1));
-				book.setIsbn(bookAttributes.get(2));
-				book.setYear(Integer.parseInt(bookAttributes.get(3)));
-				sortedSet.add(book);
-			}
-			for (Book valor : sortedSet) {
-				System.out.println(valor.toString());
+				addBooktoSet(bookAttributes, sortedSet);
 			}
 
 		} catch (java.io.FileNotFoundException e) {
@@ -55,9 +49,39 @@ public class CSVFileReader extends Book {
 			}
 		}
 	}
-
-	public static void main(String[] args) {
-		CSVFileReader csv = new CSVFileReader();
-		csv.read("books.csv");
+	
+	
+	/**
+	  * Método que adiciona um livro ao Set de forma ordenada de acordo com o compareTo da super classe.
+	  */
+	private void addBooktoSet(List<String> bookAttributes, Set<Book> sortedSet) {
+		
+		Book book = new Book();
+		book.setTitle(bookAttributes.get(0));
+		book.setAuthor(bookAttributes.get(1));
+		book.setIsbn(bookAttributes.get(2));
+		book.setYear(Integer.parseInt(bookAttributes.get(3)));
+		sortedSet.add(book);
+		
 	}
+	
+	/**
+	  * Método que imprime na tela os valores dentro do Set.
+	  */
+	private void printTheElements(Set<Book> sortedSet) {
+		for (Book valor : sortedSet) {
+			System.out.println(valor.toString());
+		}
+	}
+	
+	public static void main(String[] args) {
+		Set<Book> sortedSet = new TreeSet<Book>();
+		
+		CSVFileReader csv = new CSVFileReader();
+		
+		csv.read("books.csv", sortedSet);
+		
+		csv.printTheElements(sortedSet);
+	}
+
 }
